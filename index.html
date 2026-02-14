@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>For My Rafi | Eternal Bond</title>
+    <style>
+        :root { --pink: #ff4d6d; --dark: #c9184a; --bg: #fff0f3; --gold: #d4af37; }
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: var(--bg); font-family: 'Poppins', sans-serif; touch-action: none; }
+        
+        .floating-heart { position: absolute; color: rgba(255, 77, 109, 0.4); pointer-events: none; z-index: 1; animation: floatUp 6s linear infinite; }
+        @keyframes floatUp { from { transform: translateY(110vh) scale(1); opacity: 1; } to { transform: translateY(-10vh) scale(1.5); opacity: 0; } }
+
+        .screen { position: absolute; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; transition: 0.6s ease-in-out; flex-direction: column; text-align: center; z-index: 5; padding: 20px; box-sizing: border-box; }
+        .hidden { display: none !important; }
+
+        .card { background: rgba(255, 255, 255, 0.95); padding: 30px; border-radius: 30px; box-shadow: 0 10px 30px rgba(255, 77, 109, 0.2); width: 100%; max-width: 420px; border: 2px solid #ffccd5; }
+        .btn { background: var(--pink); color: white; border: none; padding: 15px; border-radius: 50px; font-size: 18px; cursor: pointer; margin-top: 15px; width: 100%; font-weight: bold; }
+
+        #basket { position: absolute; bottom: 30px; width: 100px; height: 60px; background: var(--pink); border-radius: 10px 10px 50px 50px; border: 3px solid white; font-size: 30px; display: flex; justify-content: center; align-items: center; z-index: 20; }
+        .score-box { position: fixed; top: 20px; font-size: 22px; font-weight: bold; color: var(--pink); background: white; padding: 10px 25px; border-radius: 30px; border: 2px solid var(--pink); z-index: 100; }
+
+        .love-meter-container { width: 100%; background: #eee; border-radius: 10px; margin: 15px 0; height: 20px; overflow: hidden; border: 1px solid #ddd; }
+        .love-meter-fill { width: 0%; height: 100%; background: linear-gradient(90deg, var(--pink), var(--dark)); transition: width 3s ease-in-out; }
+
+        .marriage-certificate { background: #fffcf2; border: 8px double var(--gold); padding: 25px; color: #333; text-align: left; }
+        .cert-title { font-size: 20px; font-weight: bold; color: #8e7312; text-align: center; text-decoration: underline; margin-bottom: 10px; }
+        
+        .scan-zone { width: 80px; height: 100px; border: 3px dashed var(--pink); border-radius: 40px; margin: 15px auto; display: flex; align-items: center; justify-content: center; position: relative; cursor: pointer; }
+        .line { position: absolute; width: 100%; height: 4px; background: var(--pink); top: 0; animation: scan 2s infinite; display: none; }
+        @keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
+
+        .doll { font-size: 100px; display: none; animation: popUp 0.6s forwards; }
+        @keyframes popUp { from { transform: scale(0); } to { transform: scale(1); } }
+    </style>
+</head>
+<body onclick="playMusic()">
+
+    <audio id="bgMusic" loop>
+        <source src="https://www.bensound.com/bensound-music/bensound-love.mp3" type="audio/mpeg">
+    </audio>
+    <div id="heartContainer"></div>
+
+    <div id="screen1" class="screen">
+        <div class="card">
+            <h1 style="color: var(--pink);">Hey Handsome! ❤️</h1>
+            <p style="text-align: left; font-size: 14px; line-height: 1.6;">Welcome to our private digital space, Rafi. I have created this surprise to show you how much you mean to me. Before we proceed, please enter your name to unlock the treasures of my heart that I've hidden just for you.</p>
+            <input type="text" id="userName" placeholder="Type your name here, Rafi..." style="padding:15px; width:85%; border-radius:15px; border:2px solid #ffccd5; text-align:center; outline: none;">
+            <button class="btn" onclick="goToInstructions()">Unlock My Love</button>
+        </div>
+    </div>
+
+    <div id="screen2" class="screen hidden">
+        <div class="card">
+            <h2 style="color: var(--pink);">The Game of Hearts 🎮</h2>
+            <div style="text-align: left; font-size: 14px; line-height: 1.6; color: #444;">
+                <p>My dear Rafi, before you see the final gift, you must prove your love. Here are your instructions:</p>
+                <ul>
+                    <li>❤️ <b>Pure Hearts:</b> Catch 10 hearts to show your dedication.</li>
+                    <li>💔 <b>Broken Hearts:</b> Avoid these misunderstandings to keep our bond strong.</li>
+                    <li>🌵 <b>Thorns:</b> Stay away from the obstacles that come our way.</li>
+                </ul>
+                <p>Use your finger to slide the basket and protect our love!</p>
+            </div>
+            <button class="btn" onclick="startTheGame()">I'm Ready, Baby!</button>
+        </div>
+    </div>
+
+    <div id="screen3" class="screen hidden" style="background:white;">
+        <div class="score-box">Score: <span id="score">0</span> / 10</div>
+        <div id="basket">🧺</div>
+    </div>
+
+    <div id="screen4" class="screen hidden">
+        <div class="card">
+            <h1 style="color: #2d6a4f;">CONGRATULATIONS! 🎉</h1>
+            <p style="font-size: 18px; font-weight: bold; color: var(--pink);">"You won my hearts and my soul!"</p>
+            
+            <p style="margin-top:15px; font-size:14px; font-weight:bold;">Rafi's Love Level for Bindu:</p>
+            <div class="love-meter-container"><div id="loveFill" class="love-meter-fill"></div></div>
+            <p id="lovePercent" style="font-weight:bold; color:var(--pink);">0%</p>
+
+            <p style="font-style: italic; font-size: 14px; line-height: 1.5;">"Every heart you caught represents a beautiful moment we've shared. You've held my affection with so much care and respect. I am officially yours forever!"</p>
+            <button class="btn" onclick="showScreen('screen5')">Continue to My Heart ❤️</button>
+        </div>
+    </div>
+
+    <div id="screen5" class="screen hidden">
+        <div class="card">
+            <h1 style="color: var(--pink);">Rafi... 🌹</h1>
+            <p style="font-size: 15px; line-height: 1.7;">"In a world full of billions, my heart chose you. You are the reason I smile every morning and the dream I see every night. My life became a beautiful melody the day I met you, and I never want it to end."</p>
+            <h2 style="font-size: 22px; margin-bottom: 20px;">Will you be my Valentine?</h2>
+            <div style="display: flex; gap: 10px;">
+                <button class="btn" style="flex: 1;" onclick="showScreen('screen6')">YES! ❤️</button>
+                <button class="btn" style="flex: 1; background: var(--dark);" onclick="showScreen('screen6')">OFCOURSE! 💍</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="screen6" class="screen hidden">
+        <div class="card">
+            <h2>Seal Our Bond ☝️</h2>
+            <p style="font-size: 14px; line-height: 1.5;">Rafi, please place your thumb on the scanner below to officially sign the digital contract of our eternal love and commitment.</p>
+            <div class="scan-zone" onclick="startFingerScan()">
+                <div class="line" id="scanLine"></div>
+                <span style="font-size: 40px;">☝️</span>
+            </div>
+            <p id="scanMsg"><b>WAITING FOR RAFI'S SIGNATURE...</b></p>
+        </div>
+    </div>
+
+    <div id="screen7" class="screen hidden">
+        <div class="card marriage-certificate">
+            <div class="cert-title">Marriage Registration Certificate</div>
+            <p style="font-size: 11px; text-align: center;"><b>Date: Feb 14, 2026</b></p>
+            <p style="font-size: 12px; margin-top: 10px; line-height: 1.7;">This document officially certifies that an eternal bond of love has been legally registered between <b>RAFI</b> and <b>BINDU</b>. From the moment they met on <b>June 25, 2021</b>, their souls have been inseparable. By signing this document, Rafi promises to love, protect, and cherish Bindu for seven lifetimes. This bond is unbreakable and witnessed by their pure hearts.</p>
+            <p style="font-size: 11px; color: var(--pink); font-weight: bold; text-align: center; border-top: 1px solid #ccc; padding-top: 10px;">Verified Digital Signature: RAFI ✅</p>
+            <button class="btn" onclick="showScreen('screen8')">See Your Final Surprise 🎁</button>
+        </div>
+    </div>
+
+    <div id="screen8" class="screen hidden">
+        <h2 style="color: var(--pink); margin-bottom: 20px;">A Special Gift for You...</h2>
+        <div id="gift" style="font-size:90px; cursor:pointer;" onclick="revealMe()">🎁</div>
+        <div id="doll" class="doll">👸</div>
+        <div id="tag" style="display:none; background:var(--pink); color:white; padding:8px 25px; border-radius:15px; margin-top:15px; font-weight:bold;">It's Me, Your Princess!</div>
+        <div id="kissMsg" style="display:none; margin-top: 15px;">
+            <p style="font-weight: bold; color: var(--pink); font-size: 20px;">Lots of Kisses, Baby! 💋💋💋</p>
+            <button class="btn" onclick="showScreen('screen9')" style="width: auto; padding: 10px 40px;">Next Page ❤️</button>
+        </div>
+    </div>
+
+    <div id="screen9" class="screen hidden">
+        <div style="background:white; padding:30px 20px; border-radius:30px; border:2px solid #ffccd5; width: 85%;">
+            <p style="font-size: 14px; margin:0; color: #666;">Our Beautiful Journey Started on June 25, 2021</p>
+            <h1 id="dayCounter" style="color: var(--pink); margin: 20px 0; font-size: 40px;"></h1>
+            <p style="font-size: 16px; font-weight: bold;">Days of Love & Togetherness ∞</p>
+        </div>
+        <button class="btn" onclick="showScreen('screen10')" style="width: auto; padding: 12px 50px; margin-top: 30px;">Final Message ❤️</button>
+    </div>
+
+    <div id="screen10" class="screen hidden">
+        <div style="font-size: 80px; animation: heartbeat 1.2s infinite;">💖</div>
+        <h1 style="color: var(--pink); margin-top: 25px;">Thank you for watching, Baby! ❤️</h1>
+        <p style="font-size: 20px; color: #444; line-height: 1.6; padding: 0 20px;">
+            I hope this little surprise brought a big smile to your handsome face. You are the best thing that ever happened to me.
+        </p>
+        <p style="font-size: 24px; font-weight: bold; margin-top: 20px;">I love you so much, Rafi! 💋🫂</p>
+        <p style="font-size: 13px; color: #888; margin-top: 50px;">Always and Forever Yours, <br><b>Bindu</b></p>
+    </div>
+
+    <script>
+        setInterval(() => {
+            const h = document.createElement('div'); h.innerHTML = '❤️'; h.className = 'floating-heart';
+            h.style.left = Math.random() * 100 + 'vw'; h.style.fontSize = (Math.random() * 20 + 10) + 'px';
+            document.getElementById('heartContainer').appendChild(h); setTimeout(() => h.remove(), 6000);
+        }, 600);
+
+        function playMusic() { document.getElementById('bgMusic').play().catch(()=>{}); }
+
+        function showScreen(id) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
+            document.getElementById(id).classList.remove('hidden');
+            if(id === 'screen4') runLoveMeter();
+            if(id === 'screen9') {
+                const start = new Date("2021-06-25"); const now = new Date();
+                const diff = Math.floor((now - start) / (1000 * 60 * 60 * 24));
+                document.getElementById('dayCounter').innerText = diff + " Days";
+            }
+        }
+
+        function runLoveMeter() {
+            let fill = document.getElementById('loveFill'); let text = document.getElementById('lovePercent');
+            setTimeout(() => {
+                fill.style.width = "100%";
+                let count = 0; let interval = setInterval(() => {
+                    count += 20; text.innerText = count + "%";
+                    if(count >= 1000) { text.innerText = "1000% (Infinite Love!)"; clearInterval(interval); }
+                }, 40);
+            }, 500);
+        }
+
+        function goToInstructions() {
+            if(document.getElementById('userName').value.toLowerCase().trim() === 'rafi') {
+                playMusic(); showScreen('screen2');
+            } else alert("Access Denied! ❤️");
+        }
+
+        function startTheGame() {
+            showScreen('screen3'); let score = 0; const basket = document.getElementById('basket');
+            const move = (e) => {
+                let x = (e.type === 'touchmove') ? e.touches[0].pageX : e.pageX;
+                basket.style.left = Math.max(0, Math.min(window.innerWidth - 100, x - 50)) + 'px';
+            };
+            document.addEventListener('touchmove', move, {passive: false});
+            document.addEventListener('mousemove', move);
+            let g = setInterval(() => {
+                const t = ['❤️','❤️','💔','🌵'][Math.floor(Math.random()*4)];
+                const o = document.createElement('div'); o.innerHTML = t; o.style.position='absolute';
+                o.style.left=Math.random()*(window.innerWidth-40)+'px'; o.style.top='-50px'; o.style.fontSize='40px';
+                document.getElementById('screen3').appendChild(o);
+                let p = -50; let fall = setInterval(() => {
+                    p += 6; o.style.top = p + 'px';
+                    let oR = o.getBoundingClientRect(); let bR = basket.getBoundingClientRect();
+                    if(oR.bottom >= bR.top && oR.left < bR.right && oR.right > bR.left) {
+                        if(t==='❤️') score++; else score--;
+                        document.getElementById('score').innerText = score;
+                        o.remove(); clearInterval(fall);
+                        if(score>=10) { clearInterval(g); showScreen('screen4'); }
+                    }
+                    if(p > window.innerHeight) { o.remove(); clearInterval(fall); }
+                }, 20);
+            }, 700);
+        }
+
+        function startFingerScan() {
+            document.getElementById('scanLine').style.display = 'block';
+            document.getElementById('scanMsg').innerText = "SCANNING FINGER...";
+            setTimeout(() => { showScreen('screen7'); }, 3000);
+        }
+
+        function revealMe() {
+            document.getElementById('gift').style.display = 'none';
+            document.getElementById('doll').style.display = 'block';
+            document.getElementById('tag').style.display = 'block';
+            document.getElementById('kissMsg').style.display = 'block';
+        }
+    </script>
+    <style>
+        @keyframes heartbeat { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+    </style>
+</body>
+</html>
